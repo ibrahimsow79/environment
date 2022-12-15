@@ -11,7 +11,7 @@ metadata:
   
 vpc:
   autoAllocateIPv6: false
-  cidr: 192.168.0.0/16
+  cidr: 192.168.0.0/19
   clusterEndpoints:
     privateAccess: false
     publicAccess: true
@@ -20,11 +20,10 @@ vpc:
     gateway: Single
  
   
-availabilityZones: ["eu-west-1a", "eu-west-1b"]
+availabilityZones: ["eu-west-1a", "eu-west-1b","eu-west-1c"]
 
 managedNodeGroups:
 - name: nodegroup
-#  cloudWatch: true
   privateNetworking: true
   volumeIOPS: 3000
   volumeSize: 80
@@ -34,6 +33,7 @@ managedNodeGroups:
   iam:
     withAddonPolicies:
         albIngress: true
+        cloudwtach: true
   instanceType: t3.small
   ssh:
     enableSsm: true
