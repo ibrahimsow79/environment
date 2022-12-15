@@ -29,11 +29,11 @@ managedNodeGroups:
   volumeSize: 80
   volumeThroughput: 125
   volumeType: gp3
-  desiredCapacity: 2
+  desiredCapacity: 3
   iam:
     withAddonPolicies:
         albIngress: true
-        cloudwtach: true
+        cloudwatch: true
   instanceType: t3.small
   ssh:
     enableSsm: true
