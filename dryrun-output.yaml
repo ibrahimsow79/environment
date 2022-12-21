@@ -16,7 +16,7 @@ iam:
 kind: ClusterConfig
 managedNodeGroups:
 - amiFamily: AmazonLinux2
-  desiredCapacity: 2
+  desiredCapacity: 3
   disableIMDSv1: false
   disablePodIMDS: false
   iam:
@@ -39,8 +39,8 @@ managedNodeGroups:
   labels:
     alpha.eksctl.io/cluster-name: eksworkshop-eksctl
     alpha.eksctl.io/nodegroup-name: nodegroup
-  maxSize: 2
-  minSize: 2
+  maxSize: 6
+  minSize: 3
   name: nodegroup
   privateNetworking: false
   releaseVersion: ""

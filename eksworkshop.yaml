@@ -30,6 +30,8 @@ managedNodeGroups:
   volumeThroughput: 125
   volumeType: gp3
   desiredCapacity: 3
+  maxSize: 6
+  minSize: 3
   iam:
     withAddonPolicies:
         albIngress: true
