@@ -11,7 +11,7 @@ metadata:
   
 vpc:
   autoAllocateIPv6: false
-  cidr: 192.168.0.0/19
+  cidr: 10.205.128.0/19
   clusterEndpoints:
     privateAccess: false
     publicAccess: true
