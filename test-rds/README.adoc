@@ -1,0 +1,37 @@
+## Configuration de la base de données
+Apres la création de la base de données, il est necessaire de se connecter sur la machine afin de configuer le mot de passe root et de créer les comptes pour les developpeurs.
+
+* Recupération du mot de passe root
+[source, ssh]
+----
+docker logs mysql | grep GENERATED
+----
+
+* Se connecter avec le mot de passe à mysql
+[source, ssh]
+----
+docker exec -it mysql mysql -uroot -p
+----
+
+* Modifier le mot de passe
+[source, ssh]
+----
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'password'
+----
+
+* Créer un nouvel utilisateur
+[source, ssh]
+----
+CREATE USER 'developper'@'%' IDENTIFIED BY 'p@ssword?';
+----
+
+* Mettre les droits sur le developpeur
+[source, ssh]
+----
+GRANT ALL PRIVILEGES ON * . * TO 'developper'@'%';
+FLUSH PRIVILEGES;
+----
+Changement de tout de l'adressage réseau nous passons de 10.0.0.0/16 à 10.50.0.0/16 pour le VPC.
+Discussion avec Renaud Bonjour le bloc 10.1.0.0/16 et + est utilisé en interne et m'a conseillé d'utiliser à partir de 10.50.0.0/16
+
+Dans les security group il faudra limiter les ports ssh et rdp aux deux IP publiques de Mutex : 62.129.10.227 ou 62.129.10.163
