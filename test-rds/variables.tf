@@ -112,39 +112,67 @@ variable "name_sqlclient" {
 
 # ================================================= Database=========================================
 
-variable "allocated_storage_space" {
+variable "allocated_storage" {
   description = "Disk space allocated for the database"
   default     = "20"
 }
 
-variable "storage_type" {
-  description = "type of storage to be used for the database"
-  default     = "gp2"
+variable "allow_major_version_upgrade" {
+  description = "to allow majour version upgrade"
+  default     = false
 }
 
-variable "engine" {
-  description = "type of engine Postgre, mysql, Oracle, ...."
+variable "allow_minor_version_upgrade" {
+  description = "to allow majour version upgrade"
+  default     = true
+}
+
+variable "db_engine" {
+  description = "DB Engine"
   default     = "mysql"
 }
 
 variable "engine_version" {
-  description = "engine version to be used for the database"
+  description = "DB Engine version"
   default     = "8.0.28"
 }
 
-variable "instance_class" {
-  description = "instance class for the database"
-  default     = "db.t3.micro"
+variable "db_instance_class" {
+  description = "Instance classe"
+  default     = "db.t2.medium"
 }
 
-variable "db_name" {
-  description = "Database name"
-  default     = "dbtopicleader"
+variable "db_instance_name" {
+  description = "DB Instance Name"
+  default     = "à remplir"
 }
 
-variable "name" {
-  description = "Name"
-  default     = "topic-leader-db"
+
+variable "backup_window" {
+  description = "backup windows"
+}
+
+variable "backup_retention_period" {
+  description = "rettention period for the backup"
+  default     = 2
+}
+
+variable "copy_tags_to_snapshot" {
+  description = "Do we copy tags  to snapshot"
+}
+
+variable "deletion_protection" {
+  description = "to prevent accidental delete"
+  default     = false
+}
+
+variable "maintenance_window" {
+  description = "time for the windows maintenance"
+}
+
+variable "multi-az" {
+  description = "High available database"
+  default     = false
 }
 
 variable "username" {
@@ -156,6 +184,45 @@ variable "password" {
   description = "Password to be used"
   default     = "oracle4u"
 }
+
+
+variable "storage_type" {
+  description = "type of storage to be used for the database"
+  default     = "gp2"
+}
+
+variable "storage_envcrypted" {
+  description = "do we encryp the storage"
+  default     = true
+}
+
+variable "skip_final_snapshot" {
+  description = "Do we skip the final storage"
+  default     = true
+}
+
+
+
+
+variable "password" {
+  description = "Password to be used"
+  default     = "oracle4u"
+}
+
+
+variable "db_name" {
+  description = "Database name"
+  default     = "dbtopicleader"
+}
+
+variable "name" {
+  description = "Name"
+  default     = "topic-leader-db"
+}
+
+
+
+
 
 /*
 variable "db_subnet_group" {

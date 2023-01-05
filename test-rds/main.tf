@@ -1,7 +1,7 @@
 # Building the environment for i-decide application. Both Dev ad Prod envrionments are very similar.
 # Define AWS as our provider
 provider "aws" {
-  region                   = var.aws_region
+  region = var.aws_region
   // shared_credentials_files = var.my_credentials
   // profile                  = var.my_profile
   default_tags {
@@ -45,34 +45,34 @@ data "aws_vpc" "my-vpc" {
   }
 }
 
-data "aws_subnet_ids" "public-subnet-a" {
-  vpc_id = data.aws_vpc.my-vpc.id
+data "aws_subnets" "public-subnet-a" {
+  // vpc_id = data.aws_vpc.my-vpc.id
   tags = {
-      Name = "Public Subnet A"
+    Name = "Public Subnet A"
   }
 }
 
-data "aws_subnet_ids" "public-subnet-b" {
-  vpc_id = data.aws_vpc.my-vpc.id
+data "aws_subnets" "public-subnet-b" {
+  // vpc_id = data.aws_vpc.my-vpc.id
   tags = {
-      Name = "Public Subnet B"
+    Name = "Public Subnet B"
   }
 }
 
 
-data "aws_subnet_ids" "private-subnet-a" {
-  vpc_id = data.aws_vpc.my-vpc.id
+data "aws_subnets" "private-subnet-a" {
+  // vpc_id = data.aws_vpc.my-vpc.id
   tags = {
-      Name = "Private subnet A"
+    Name = "Private subnet A"
   }
 }
 
-data "aws_subnet_ids" "private-subnet-b" {
-  vpc_id = data.aws_vpc.my-vpc.id
+data "aws_subnets" "private-subnet-b" {
+  // vpc_id = data.aws_vpc.my-vpc.id
   tags = {
-      Name = "Private subnet B"
+    Name = "Private subnet B"
   }
-  
+
 }
 
 // Creating the database
@@ -80,27 +80,36 @@ data "aws_subnet_ids" "private-subnet-b" {
 
 resource "aws_db_subnet_group" "my_db_subnet_group" {
   name       = "my_db_subnet_group"
-  subnet_ids = [data.aws_subnet_ids.private-subnet-a.ids, data.aws_subnet_ids.private-subnet-b.ids]
+  subnet_ids = [data.aws_subnets.private-subnet-a.ids[0], data.aws_subnets.private-subnet-b.ids[0]]
   tags = {
     Name = "My DB subnet group"
   }
 }
-/*
+
 module "db" {
   source = "./database/"
 
-  allocated_storage = var.allocated_storage_space
-  storage_type      = var.storage_type
-  engine            = var.engine
-  engine_version    = var.engine_version
-  instance_class    = var.instance_class
-  db_name           = var.db_name
-  username          = var.username
-  password          = var.password
-  db_subnet_group   = aws_db_subnet_group.my_db_subnet_group.id
-  db_security_group = module.vpc.sg_db_idecide_id
-  env               = var.env
-  name              = var.name
-  db_identifier     = var.db_identifier
+  allocated_storage                     = var.allocated_storage_space
+  allow_major_version_upgrade           = var.allow_major_version_upgrade
+  auto_minor_version_upgrade            = va.auto_minor_version_upgrade
+  engine                                = var.engine
+  engine_version                        = var.engine_version
+  instance_class                        = var.instance_class
+  identifier                            = var.db_instance_name
+  backup_window                         = var.backup_window
+  backup_retention_period               = var.backup_retention_period
+  copy_tags_to_snapshot                 = var.copy_tags_to_snapshot
+  deletion_protection                   = var.deletion_protection
+  db_name                               = var.db_name
+  username                              = var.username
+  password                              = var.password
+  storage_type                          = var.storage_type
+  storage_encrypted                     = var.storage_encrypted
+  skip_final_snapshot                   = var.skip_final_snapshot
+  final_snapshot_identifier             = var.final_snapshot_identifier
+  db_subnet_group                       = aws_db_subnet_group.my_db_subnet_group.id
+  vpc_security_group_ids_security_group = module.vpc.sg_db_idecide_id
+  env                                   = var.env
+  name                                  = var.name
+
 }
-*/

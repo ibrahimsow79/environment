@@ -17,14 +17,14 @@ output "vpc_arn" {
   value = data.aws_vpc.my-vpc.arn
 }
 output "public_subnet_a_id" {
-  value = data.aws_subnet_ids.public-subnet-a.ids
+  value = data.aws_subnets.public-subnet-a.ids
 }
 output "public_subnet_b_id" {
-  value = data.aws_subnet_ids.public-subnet-b.ids
+  value = data.aws_subnets.public-subnet-b.ids
 }
 output "private_subnet_a_id" {
-  value = data.aws_subnet_ids.private-subnet-a.ids
+  value = data.aws_subnets.private-subnet-a.ids
 }
 output "private_subnet_b_id" {
-  value = data.aws_subnet_ids.private-subnet-b.ids
+  value = data.aws_subnets.private-subnet-b.ids
 }
