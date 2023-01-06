@@ -10,7 +10,8 @@ terraform {
       version = "~> 4"
     }
   }
-  experiments = [
-    module_variable_optional_attrs
-  ]
+  
+  // experiments = [
+  //  module_variable_optional_attrs
+  // ]
 }

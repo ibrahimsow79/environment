@@ -28,3 +28,6 @@ output "private_subnet_a_id" {
 output "private_subnet_b_id" {
   value = data.aws_subnets.private-subnet-b.ids
 }
+output "security_group_db_id" {
+  value = data.aws_security_groups.security-group-db.ids
+}

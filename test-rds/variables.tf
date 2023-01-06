@@ -114,7 +114,7 @@ variable "name_sqlclient" {
 
 variable "allocated_storage" {
   description = "Disk space allocated for the database"
-  default     = "20"
+  default     = 20
 }
 
 variable "allow_major_version_upgrade" {
@@ -127,7 +127,7 @@ variable "allow_minor_version_upgrade" {
   default     = true
 }
 
-variable "db_engine" {
+variable "engine" {
   description = "DB Engine"
   default     = "mysql"
 }
@@ -137,16 +137,15 @@ variable "engine_version" {
   default     = "8.0.28"
 }
 
-variable "db_instance_class" {
+variable "instance_class" {
   description = "Instance classe"
   default     = "db.t2.medium"
 }
 
-variable "db_instance_name" {
+variable "identifier" {
   description = "DB Instance Name"
-  default     = "à remplir"
+  default     = "myisowrds"
 }
-
 
 variable "backup_window" {
   description = "backup windows"
@@ -166,8 +165,14 @@ variable "deletion_protection" {
   default     = false
 }
 
+variable "db_name" {
+  description = "Name of the databse"
+  default = "testdb"
+}
+
 variable "maintenance_window" {
   description = "time for the windows maintenance"
+  default = "fri:01:30-fri:02:00"
 }
 
 variable "multi-az" {
@@ -201,42 +206,22 @@ variable "skip_final_snapshot" {
   default     = true
 }
 
-
-
-
-variable "password" {
-  description = "Password to be used"
-  default     = "oracle4u"
+variable "final_snpashot_identifier" {
+  description = "Name of the final snapshot"
+  default = "last-snapshot-testdb"
 }
-
-
-variable "db_name" {
-  description = "Database name"
-  default     = "dbtopicleader"
-}
-
-variable "name" {
-  description = "Name"
-  default     = "topic-leader-db"
-}
-
-
-
-
 
 /*
 variable "db_subnet_group" {
-  description = "DB Subnet group to be used by the DB"
-  default = ""
+  description = "The DB subnet group used for this database"
 }
 */
-variable "db_security_group" {
-  description = "Security Group to be used for the database"
-  default     = ""
+variable "apply_immediately" {
+  description = "do we apply immediately the changes"
+  default = true
 }
 
-variable "db_identifier" {
-  description = "DB identifier"
-  default     = "topicleaderdb"
+variable "project" {
+  description = "Name of the project"
+  default = "claranet"
 }
-
