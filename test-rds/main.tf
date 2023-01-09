@@ -7,8 +7,10 @@ provider "aws" {
   default_tags {
     tags = {
       Location = "Paris"
-      Client   = "Chanel"
+      Client   = "Claranet"
       backup   = "Yes"
+      owner    = "ibrahim.sow@fr.clara.net"
+
     }
   }
 }
@@ -89,13 +91,13 @@ resource "aws_db_subnet_group" "my_db_subnet_group" {
 module "db" {
   source = "./database/"
 
-  allocated_storage           = var.allocated_storage
+  db_allocated_storage        = var.db_allocated_storage
   allow_major_version_upgrade = var.allow_major_version_upgrade
-  auto_minor_version_upgrade  = va.auto_minor_version_upgrade
-  engine                      = var.engine
+  auto_minor_version_upgrade  = var.allow_minor_version_upgrade
+  db_engine                   = var.db_engine
   engine_version              = var.engine_version
-  instance_class              = var.instance_class
-  identifier                  = var.identifier
+  db_instance_class           = var.db_instance_class
+  db_instance_name            = var.db_instance_name
   backup_window               = var.backup_window
   backup_retention_period     = var.backup_retention_period
   copy_tags_to_snapshot       = var.copy_tags_to_snapshot
@@ -110,8 +112,15 @@ module "db" {
   skip_final_snapshot         = var.skip_final_snapshot
   final_snapshot_identifier   = var.final_snapshot_identifier
   db_subnet_group             = aws_db_subnet_group.my_db_subnet_group.id
-  vpc_security_group_ids      = ["sg-04c8ab3a222929ae4"]
+  db_security_group           = ["sg-04c8ab3a222929ae4"]
   apply_immediately           = var.apply_immediately
   env                         = var.env
   project                     = var.project
+  dns_instance_name           = var.dns_instance_name
+/*
+  restore_to_point_in_time = [{
+    restore_time                  = null
+    source_db_instance_identifier = null
+  }]
+*/  
 }

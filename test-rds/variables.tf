@@ -112,7 +112,7 @@ variable "name_sqlclient" {
 
 # ================================================= Database=========================================
 
-variable "allocated_storage" {
+variable "db_allocated_storage" {
   description = "Disk space allocated for the database"
   default     = 20
 }
@@ -127,28 +127,30 @@ variable "allow_minor_version_upgrade" {
   default     = true
 }
 
-variable "engine" {
-  description = "DB Engine"
+variable "db_engine" {
+  description = "DB engine"
   default     = "mysql"
 }
+
 
 variable "engine_version" {
   description = "DB Engine version"
   default     = "8.0.28"
 }
 
-variable "instance_class" {
+variable "db_instance_class" {
   description = "Instance classe"
   default     = "db.t2.medium"
 }
 
-variable "identifier" {
+variable "db_instance_name" {
   description = "DB Instance Name"
-  default     = "myisowrds"
+  default     = "myisowdb"
 }
 
 variable "backup_window" {
   description = "backup windows"
+  default     = "07:00-09:00"
 }
 
 variable "backup_retention_period" {
@@ -158,6 +160,7 @@ variable "backup_retention_period" {
 
 variable "copy_tags_to_snapshot" {
   description = "Do we copy tags  to snapshot"
+  default     = true
 }
 
 variable "deletion_protection" {
@@ -167,15 +170,15 @@ variable "deletion_protection" {
 
 variable "db_name" {
   description = "Name of the databse"
-  default = "testdb"
+  default     = "testdb"
 }
 
 variable "maintenance_window" {
   description = "time for the windows maintenance"
-  default = "fri:01:30-fri:02:00"
+  default     = "fri:01:30-fri:02:00"
 }
 
-variable "multi-az" {
+variable "multi_az" {
   description = "High available database"
   default     = false
 }
@@ -196,7 +199,7 @@ variable "storage_type" {
   default     = "gp2"
 }
 
-variable "storage_envcrypted" {
+variable "storage_encrypted" {
   description = "do we encryp the storage"
   default     = true
 }
@@ -206,9 +209,9 @@ variable "skip_final_snapshot" {
   default     = true
 }
 
-variable "final_snpashot_identifier" {
+variable "final_snapshot_identifier" {
   description = "Name of the final snapshot"
-  default = "last-snapshot-testdb"
+  default     = "last-snapshot-testdb"
 }
 
 /*
@@ -218,10 +221,14 @@ variable "db_subnet_group" {
 */
 variable "apply_immediately" {
   description = "do we apply immediately the changes"
-  default = true
+  default     = false
 }
 
 variable "project" {
   description = "Name of the project"
-  default = "claranet"
+  default     = "claranet"
+}
+variable "dns_instance_name" {
+  description = "DNS name"
+  default     = null
 }
