@@ -34,5 +34,5 @@ output "security_group_db_id" {
 }
 */
 output "rds-endpoint" {
-  value = module.db.rds-endpoint
+  value = module.db2.rds-endpoint
 }
