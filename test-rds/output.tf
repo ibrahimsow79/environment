@@ -33,6 +33,18 @@ output "security_group_db_id" {
   value = data.aws_security_groups.security-group-db.ids
 }
 */
+/*
 output "rds-endpoint" {
+  value = module.db.rds-endpoint
+}
+*/
+/*
+output "rds-endpoint-2" {
   value = module.db2.rds-endpoint
 }
+*/
+/*
+output "rds-fqdn" {
+  value = module.db.rds-fqdn
+}
+*/

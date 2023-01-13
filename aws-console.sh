@@ -1,1 +1,1 @@
-eksctl create iamidentitymapping --cluster eks-cluster-ibrahim-sow --arn arn:aws:sts::395373063630:assumed-role/claranet-rw/ibrahim.sow --group system:masters --username admin
+eksctl create iamidentitymapping --cluster eks-cluster-ibrahim-sow --arn arn:aws:iam::395373063630:role/claranet-rw --group system:masters --username admin

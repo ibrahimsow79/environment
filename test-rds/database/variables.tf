@@ -100,6 +100,8 @@ variable "zone_id" {
   description = "The ID of the hosted zone to contain this record"
   default     = null
 }
+// Change
 variable "dns_instance_name" {
   description = "DNS name"
+  default = null
 }

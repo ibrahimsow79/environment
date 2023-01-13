@@ -19,7 +19,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.2"
+      version = "~> 4.49"
     }
   }
   //  backend "s3" {
@@ -27,7 +27,7 @@ terraform {
   //    key    = "infrastucture/main/terraform.tfstate"
   //    region = "eu-west-1"
   //  }
-  required_version = ">= 0.13"
+  required_version = "~>1.3"
 }
 
 
@@ -76,6 +76,30 @@ data "aws_subnets" "private-subnet-b" {
   }
 
 }
+// # Define SSH key pair for our instances
+
+resource "aws_key_pair" "default" {
+  key_name   = "vpc_keypair_isow"
+  public_key = file(var.key_path)
+}
+
+// Creating an EC2 instance
+
+module "appidecide" {
+  source = "./ec2/appidecide/"
+
+  ami               = var.ami_appidecide
+  instance_type     = var.instance_type_appidecide
+  sg_appidecide_id  = "sg-0b0f7374b92357d0d"
+  public_subnet_id  = data.aws_subnets.public-subnet-a.ids[0]
+  private_subnet_id = data.aws_subnets.private-subnet-a.ids[0]
+  key_pair          = aws_key_pair.default.id
+  private_ip        = var.private_ip_appidecide
+  env               = var.env
+}
+
+
+
 
 // Creating the database
 
@@ -87,7 +111,7 @@ resource "aws_db_subnet_group" "my_db_subnet_group" {
     Name = "My DB subnet group"
   }
 }
-
+/*
 module "db" {
   source = "./database/"
 
@@ -116,9 +140,10 @@ module "db" {
   apply_immediately           = var.apply_immediately
   env                         = var.env
   project                     = var.project
-  dns_instance_name           = var.dns_instance_name
+  zone_id                     = null
+  dns_instance_name           = null
 }
-
+*/
 
 module "db2" {
   source = "./database/"
@@ -148,9 +173,10 @@ module "db2" {
   apply_immediately           = var.apply_immediately
   env                         = var.env
   project                     = var.project
+  zone_id                     = var.zone_id
   dns_instance_name           = var.dns_instance_name
   restore_to_point_in_time = [{
-    restore_time                  = "2023-01-10T10:25:00Z"
+    restore_time                  = "2023-01-11T13:25:00Z"
     source_db_instance_identifier = "myisowdb"
   }]
 }

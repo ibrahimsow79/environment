@@ -10,13 +10,13 @@ usermod -aG adm isow
 echo "%wheel  ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
 
 #Mount Disk
-mkfs -t ext4 /dev/sdg
-mkdir /data
-mount /dev/sdg /data
-sudo echo "/dev/sdg        /data      ext4     defaults    0 2 " >> /etc/fstab
-chmod -R o+rx /data
-chown -R isow:isow /data
-cd /data
+# mkfs -t ext4 /dev/sdg
+# mkdir /data
+#mount /dev/sdg /data
+# sudo echo "/dev/sdg        /data      ext4     defaults    0 2 " >> /etc/fstab
+# chmod -R o+rx /data
+# chown -R isow:isow /data
+# cd /data
 #dd if=/dev/zero of=file.txt count=1024 bs=1024
 
 cd /tmp
@@ -63,3 +63,4 @@ service httpd start
 systemctl start awslogsd
 systemctl enable awslogsd.service
 chkconfig on
+yum -y install mysql

@@ -42,7 +42,7 @@ variable "private_subnet_cidr_b" {
 
 variable "key_path" {
   description = "SSH Public Key path"
-  default     = "/home/isow12/.ssh/id_rsa.pub"
+  default     = "/home/ec2-user/.ssh/id_rsa.pub"
   #  default = "C:\\Users\\i.sow\\.ssh\\id_rsa.pub"
 }
 
@@ -228,7 +228,13 @@ variable "project" {
   description = "Name of the project"
   default     = "claranet"
 }
+
+variable "zone_id" {
+  description = "The ID of the hosted zone to contain this record"
+  default     = "Z09634132HDPQBPOAO0D2"
+}
+
 variable "dns_instance_name" {
   description = "DNS name"
-  default     = null
+  default     = "isowdb"
 }
