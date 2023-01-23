@@ -1,0 +1,145 @@
+Name:                 aws-node-84dmr
+Namespace:            kube-system
+Priority:             2000001000
+Priority Class Name:  system-node-critical
+Node:                 ip-10-205-144-185.eu-west-1.compute.internal/10.205.144.185
+Start Time:           Fri, 20 Jan 2023 17:34:40 +0000
+Labels:               app.kubernetes.io/instance=aws-vpc-cni
+                      app.kubernetes.io/name=aws-node
+                      controller-revision-hash=7956f5dd
+                      k8s-app=aws-node
+                      pod-template-generation=2
+Annotations:          kubernetes.io/psp: eks.privileged
+Status:               Running
+IP:                   10.205.144.185
+IPs:
+  IP:           10.205.144.185
+Controlled By:  DaemonSet/aws-node
+Init Containers:
+  aws-vpc-cni-init:
+    Container ID:   containerd://885488345e6263280b9e8bd2a019d320cac57c85aaaa3bfba88a3674fea9b88f
+    Image:          602401143452.dkr.ecr.eu-west-1.amazonaws.com/amazon-k8s-cni-init:v1.11.4-eksbuild.1
+    Image ID:       602401143452.dkr.ecr.eu-west-1.amazonaws.com/amazon-k8s-cni-init@sha256:e3cb52e6e9b054c7638e0015637ac07a44bd5a9bf5dd4ac98a40c57ce21544fd
+    Port:           <none>
+    Host Port:      <none>
+    State:          Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Fri, 20 Jan 2023 17:34:49 +0000
+      Finished:     Fri, 20 Jan 2023 17:34:49 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:
+      DISABLE_TCP_EARLY_DEMUX:  false
+      ENABLE_IPv6:              false
+    Mounts:
+      /host/opt/cni/bin from cni-bin-dir (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-nxm6t (ro)
+Containers:
+  aws-node:
+    Container ID:   containerd://f1adee9efd1f899a97529c5f5d5e9ac50ba63629dc57dff380f9c4f391c7ae5e
+    Image:          602401143452.dkr.ecr.eu-west-1.amazonaws.com/amazon-k8s-cni:v1.11.4-eksbuild.1
+    Image ID:       602401143452.dkr.ecr.eu-west-1.amazonaws.com/amazon-k8s-cni@sha256:2fd65a8764b71c2f3ae6ef89e5cb0d85f57f52514815b2a9a40ccad582743fa4
+    Port:           61678/TCP
+    Host Port:      61678/TCP
+    State:          Running
+      Started:      Fri, 20 Jan 2023 17:34:52 +0000
+    Ready:          True
+    Restart Count:  0
+    Requests:
+      cpu:      25m
+    Liveness:   exec [/app/grpc-health-probe -addr=:50051 -connect-timeout=5s -rpc-timeout=5s] delay=60s timeout=10s period=10s #success=1 #failure=3
+    Readiness:  exec [/app/grpc-health-probe -addr=:50051 -connect-timeout=5s -rpc-timeout=5s] delay=1s timeout=10s period=10s #success=1 #failure=3
+    Environment:
+      ADDITIONAL_ENI_TAGS:                    {}
+      AWS_VPC_CNI_NODE_PORT_SUPPORT:          true
+      AWS_VPC_ENI_MTU:                        9001
+      ANNOTATE_POD_IP:                        false
+      AWS_VPC_K8S_CNI_CONFIGURE_RPFILTER:     false
+      AWS_VPC_K8S_CNI_CUSTOM_NETWORK_CFG:     false
+      AWS_VPC_K8S_CNI_EXTERNALSNAT:           false
+      AWS_VPC_K8S_CNI_LOGLEVEL:               DEBUG
+      AWS_VPC_K8S_CNI_LOG_FILE:               /host/var/log/aws-routed-eni/ipamd.log
+      AWS_VPC_K8S_CNI_RANDOMIZESNAT:          prng
+      AWS_VPC_K8S_CNI_VETHPREFIX:             eni
+      AWS_VPC_K8S_PLUGIN_LOG_FILE:            /var/log/aws-routed-eni/plugin.log
+      AWS_VPC_K8S_PLUGIN_LOG_LEVEL:           DEBUG
+      DISABLE_INTROSPECTION:                  false
+      DISABLE_METRICS:                        false
+      DISABLE_NETWORK_RESOURCE_PROVISIONING:  false
+      CLUSTER_NAME:                           eks-cluster-one-headless
+      ENABLE_IPv4:                            true
+      ENABLE_IPv6:                            false
+      ENABLE_POD_ENI:                         false
+      ENABLE_PREFIX_DELEGATION:               false
+      WARM_ENI_TARGET:                        1
+      VPC_ID:                                 vpc-008e466df0d4c5a5c
+      WARM_PREFIX_TARGET:                     1
+      MY_NODE_NAME:                            (v1:spec.nodeName)
+    Mounts:
+      /host/etc/cni/net.d from cni-net-dir (rw)
+      /host/opt/cni/bin from cni-bin-dir (rw)
+      /host/var/log/aws-routed-eni from log-dir (rw)
+      /run/xtables.lock from xtables-lock (rw)
+      /var/run/aws-node from run-dir (rw)
+      /var/run/dockershim.sock from dockershim (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-nxm6t (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  cni-bin-dir:
+    Type:          HostPath (bare host directory volume)
+    Path:          /opt/cni/bin
+    HostPathType:  
+  cni-net-dir:
+    Type:          HostPath (bare host directory volume)
+    Path:          /etc/cni/net.d
+    HostPathType:  
+  dockershim:
+    Type:          HostPath (bare host directory volume)
+    Path:          /var/run/dockershim.sock
+    HostPathType:  
+  log-dir:
+    Type:          HostPath (bare host directory volume)
+    Path:          /var/log/aws-routed-eni
+    HostPathType:  DirectoryOrCreate
+  run-dir:
+    Type:          HostPath (bare host directory volume)
+    Path:          /var/run/aws-node
+    HostPathType:  DirectoryOrCreate
+  xtables-lock:
+    Type:          HostPath (bare host directory volume)
+    Path:          /run/xtables.lock
+    HostPathType:  
+  kube-api-access-nxm6t:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 op=Exists
+                             node.kubernetes.io/disk-pressure:NoSchedule op=Exists
+                             node.kubernetes.io/memory-pressure:NoSchedule op=Exists
+                             node.kubernetes.io/network-unavailable:NoSchedule op=Exists
+                             node.kubernetes.io/not-ready:NoExecute op=Exists
+                             node.kubernetes.io/pid-pressure:NoSchedule op=Exists
+                             node.kubernetes.io/unreachable:NoExecute op=Exists
+                             node.kubernetes.io/unschedulable:NoSchedule op=Exists
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  10m   default-scheduler  Successfully assigned kube-system/aws-node-84dmr to ip-10-205-144-185.eu-west-1.compute.internal
+  Normal  Pulling    10m   kubelet            Pulling image "602401143452.dkr.ecr.eu-west-1.amazonaws.com/amazon-k8s-cni-init:v1.11.4-eksbuild.1"
+  Normal  Pulled     10m   kubelet            Successfully pulled image "602401143452.dkr.ecr.eu-west-1.amazonaws.com/amazon-k8s-cni-init:v1.11.4-eksbuild.1" in 6.98035759s
+  Normal  Created    10m   kubelet            Created container aws-vpc-cni-init
+  Normal  Started    10m   kubelet            Started container aws-vpc-cni-init
+  Normal  Pulling    10m   kubelet            Pulling image "602401143452.dkr.ecr.eu-west-1.amazonaws.com/amazon-k8s-cni:v1.11.4-eksbuild.1"
+  Normal  Pulled     10m   kubelet            Successfully pulled image "602401143452.dkr.ecr.eu-west-1.amazonaws.com/amazon-k8s-cni:v1.11.4-eksbuild.1" in 1.884404411s
+  Normal  Created    10m   kubelet            Created container aws-node
+  Normal  Started    10m   kubelet            Started container aws-node

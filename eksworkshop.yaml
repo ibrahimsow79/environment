@@ -1,0 +1,60 @@
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: eks-cluster-one-headless
+  region: eu-west-1
+  version: "1.24"
+  tags:
+    owner: ibrahim.sow@fr.clara.net
+  
+vpc:
+  autoAllocateIPv6: false
+  cidr: 10.205.128.0/19
+  clusterEndpoints:
+    privateAccess: false
+    publicAccess: true
+  manageSharedNodeSecurityGroupRules: true
+  nat:
+    gateway: Single
+ 
+  
+availabilityZones: ["eu-west-1a", "eu-west-1b","eu-west-1c"]
+
+managedNodeGroups:
+- name: nodegroup
+  privateNetworking: true
+  volumeIOPS: 3000
+  volumeSize: 80
+  volumeThroughput: 125
+  volumeType: gp3
+  desiredCapacity: 3
+  maxSize: 6
+  minSize: 3
+  iam:
+    withAddonPolicies:
+        albIngress: true
+        cloudwatch: true
+  instanceType: t3.small
+  ssh:
+    enableSsm: true
+  tags:
+    owner: ibrahim.sow@fr.clara.net
+
+addons:
+- name: vpc-cni
+  attachPolicyARNs:
+    - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+- name: coredns
+  version: latest # auto discovers the latest available
+- name: kube-proxy
+  version: latest    
+
+# To enable all of the control plane logs, uncomment below:
+cloudWatch:
+  clusterLogging:
+    enableTypes: [ "api", "audit", "authenticator", "controllerManager","scheduler"]
+
+secretsEncryption:
+  keyARN: arn:aws:kms:eu-west-1:395373063630:key/8e1df365-9be2-47ff-9e17-b522c6c8864f

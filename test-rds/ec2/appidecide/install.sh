@@ -1,0 +1,66 @@
+#!/bin/sh
+useradd isow && mkdir /home/isow/.ssh && chown 700 /home/isow/.ssh && echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC4HsdsnkNa/Czac5duRGzD39BcFFd7407kY7s1dRfGBabccv7UXNyjRJ1weMxYpj5GWwv0AXxA9Se4rndysM2jELWFGNE8OxHZJE8SXB3dU+yjlT03na6SGk87OKmEEAYO5Q1PXkwfrhUZbLkPRyoZukbU72W9O9gznFFas+HEsCDkTaPhmwfVlOWHDzqFQj7Q3cSMrJu+1sErh1yyir/uweruuC4u5hqYutm9KDdNXH2EYFlPFf5l5rr7A0nvOJEF5nDk2INQTM5VB8TJJ7JbaCNijVpc2ixj1kxSwt5c8hKM8rBMpilMNB+gkk0inWo3Jxv4rn076mOba8NuMTPio/9ukUDl2UcOJkmXpAJdcC9IdnNLNH0z9bROej999bUVolcMn4DaGq+LDaVXW6cEMRl3/k0hy5PJ5J9j2/AawjElD4uNAPAndgNxVmU1Dc2CZ0b/Z5lrAmUAx2tOHw76tgN2BTdYKSgkEIPif+ygcOIurh5QZYY3U5W2IUouAoNmuehFKZ8gPS6DRBcnq9uLJ5V9TjcVOcUSQp3cziZ6zJYIp161zIo0QGxmNj/lALke++2gCETul2jxyLxiFjdtXmJwo6nxeky2caMg0j4P1YR0fq/mJKMW5fokwFnovdstSbN0RlaY7zgNIgT1bmwOHixFd89GJdgUDlsfEqz8JQ== ibrahim.sow@mutex-exterieur.fr" > /home/isow/.ssh/authorized_keys && chmod 600 /home/isow/.ssh/authorized_keys && chown -R isow:isow /home/isow
+
+# Ajout des user isow
+usermod -aG wheel isow
+usermod -aG adm isow
+
+# Ajout du groupe wheel pour faire un sudo sans qu'on leur réclame un password
+
+echo "%wheel  ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
+
+#Mount Disk
+# mkfs -t ext4 /dev/sdg
+# mkdir /data
+#mount /dev/sdg /data
+# sudo echo "/dev/sdg        /data      ext4     defaults    0 2 " >> /etc/fstab
+# chmod -R o+rx /data
+# chown -R isow:isow /data
+# cd /data
+#dd if=/dev/zero of=file.txt count=1024 bs=1024
+
+cd /tmp
+yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+systemctl enable amazon-ssm-agent
+systemctl start amazon-ssm-agent
+
+cd
+amazon-linux-extras install epel
+yum update -y
+yum -y install httpd php
+yum -y install awslogs
+
+wget https://d1rj8jzxfnqtlj.cloudfront.net/phpapp.zip
+unzip phpapp.zip -d /var/www/html/
+
+cat << EOF > /etc/awslogs/awscli.conf
+[plugins]
+cwlogs = cwlogs
+[default]
+region = eu-west-3
+EOF
+
+cat << EOF >>/etc/awslogs/awslogs.conf
+
+[/etc/httpd/logs/access_log]
+datetime_format = %b %d %H:%M:%S
+file = /etc/httpd/logs/access_log
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = /etc/httpd/logs/access_log
+
+[/etc/httpd/logs/error_log]
+datetime_format = %b %d %H:%M:%S
+file = /etc/httpd/logs/error_log
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = /etc/httpd/logs/error_log
+EOF
+
+service httpd start
+systemctl start awslogsd
+systemctl enable awslogsd.service
+chkconfig on
+yum -y install mysql

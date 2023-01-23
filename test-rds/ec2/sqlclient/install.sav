@@ -1,0 +1,86 @@
+#!/bin/sh
+yum update -y
+
+useradd isow && mkdir /home/isow/.ssh && chown 700 /home/isow/.ssh && echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC4HsdsnkNa/Czac5duRGzD39BcFFd7407kY7s1dRfGBabccv7UXNyjRJ1weMxYpj5GWwv0AXxA9Se4rndysM2jELWFGNE8OxHZJE8SXB3dU+yjlT03na6SGk87OKmEEAYO5Q1PXkwfrhUZbLkPRyoZukbU72W9O9gznFFas+HEsCDkTaPhmwfVlOWHDzqFQj7Q3cSMrJu+1sErh1yyir/uweruuC4u5hqYutm9KDdNXH2EYFlPFf5l5rr7A0nvOJEF5nDk2INQTM5VB8TJJ7JbaCNijVpc2ixj1kxSwt5c8hKM8rBMpilMNB+gkk0inWo3Jxv4rn076mOba8NuMTPio/9ukUDl2UcOJkmXpAJdcC9IdnNLNH0z9bROej999bUVolcMn4DaGq+LDaVXW6cEMRl3/k0hy5PJ5J9j2/AawjElD4uNAPAndgNxVmU1Dc2CZ0b/Z5lrAmUAx2tOHw76tgN2BTdYKSgkEIPif+ygcOIurh5QZYY3U5W2IUouAoNmuehFKZ8gPS6DRBcnq9uLJ5V9TjcVOcUSQp3cziZ6zJYIp161zIo0QGxmNj/lALke++2gCETul2jxyLxiFjdtXmJwo6nxeky2caMg0j4P1YR0fq/mJKMW5fokwFnovdstSbN0RlaY7zgNIgT1bmwOHixFd89GJdgUDlsfEqz8JQ== ibrahim.sow@mutex-exterieur.fr" > /home/isow/.ssh/authorized_keys && chmod 600 /home/isow/.ssh/authorized_keys && chown -R isow:isow /home/isow
+
+usermod -aG wheel isow
+usermod -aG adm isow
+
+# Ajout du groupe wheel pour faire un sudo sans qu'on leur réclame un password
+
+echo "%wheel  ALL=(ALL)       NOPASSWD: ALL" >> /etc/sudoers
+
+#Installation openjdk 10
+curl https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_linux-x64_bin.tar.gz -o openjdk-10.0.2_linux-x64_bin.tar.gz
+
+tar zxf openjdk-10.0.2_linux-x64_bin.tar.gz -C /usr/local
+mv /usr/local/jdk-10.0.2 /usr/local/jdk-10
+alternatives --install /usr/bin/java java /usr/local/jdk-10/bin/java 1
+
+alternatives --install /usr/bin/jar jar /usr/local/jdk-10/bin/jar 1
+alternatives --install /usr/bin/javac javac /usr/local/jdk-10/bin/javac 1
+alternatives --set jar /usr/local/jdk-10/bin/jar
+alternatives --set javac /usr/local/jdk-10/bin/javac
+
+#Installation Tomcat (I got a big issue as tomcat v8.5.34 did not exist)
+curl -O https://bootstrap.pypa.io/get-pip.py
+python get-pip.py --user
+/root/.local/bin/pip install awscli --upgrade --user
+
+mkdir /data/server
+groupadd tomcat
+useradd -M -s /bin/nologin -g tomcat -d /data/server/tomcat tomcat
+
+# sudo curl http://apache.mediamirrors.org/tomcat/tomcat-8/v8.5.35/bin/apache-tomcat-8.5.35.tar.gz -o apache-tomcat-8.5.35.tar.gz
+sudo /root/.local/bin/aws s3 cp s3://tomcat-bin/apache-tomcat-8.5.35.tar.gz /apache-tomcat-8.5.35.tar.gz
+
+sudo tar zxvf apache-tomcat-8.5.35.tar.gz -C /data/server
+sudo chown -R tomcat:tomcat  /data/server/apache-tomcat-8.5.35
+sudo ln -s /data/server/apache-tomcat-8.5.35 /data/server/tomcat
+sudo sed 's/8080/8090/g' /data/server/tomcat/conf/server.xml > /data/server/tomcat/conf/server.xml.tmp
+sudo mv /data/server/tomcat/conf/server.xml.tmp /data/server/tomcat/conf/server.xml
+
+# Suite au email de Nicolas du jeudi 15 Novembre : copie du driver mysql
+sudo curl http://central.maven.org/maven2/mysql/mysql-connector-java/8.0.13/mysql-connector-java-8.0.13.jar -o /data/server/tomcat/lib/mysql-connector-java-8.0.13.jar
+sudo chown tomcat:tomcat /data/server/tomcat/lib/mysql-connector-java-8.0.13.jar 
+
+
+#Copie du S3 la configuration
+# sudo curl -O https://bootstrap.pypa.io/get-pip.py
+# sudo python get-pip.py --user
+# sudo /root/.local/bin/pip install awscli --upgrade --user
+sudo yum -y install unzip
+sudo /root/.local/bin/aws s3 cp s3://mutex-er-recette-configuration/tomcat/tomcat.service /etc/systemd/system/tomcat.service
+sudo /root/.local/bin/aws s3 cp s3://mutex-er-recette-configuration/tomcat/tomcat-users.xml /data/server/apache-tomcat-8.5.35/conf/tomcat-users.xml
+sudo /root/.local/bin/aws s3 cp s3://mutex-er-recette-configuration/tomcat/manager-context.xml /data/server/apache-tomcat-8.5.35/webapps/manager/META-INF/context.xml
+sudo /root/.local/bin/aws s3 cp s3://mutex-er-recette-configuration/configuration.zip /data/configuration.zip
+sudo unzip /data/configuration.zip -d /data/
+
+sudo systemctl daemon-reload
+sudo systemctl start tomcat
+sudo systemctl enable tomcat
+
+
+#Installation Docker
+sudo mkdir /data/docker
+sudo yum install -y yum-utils \
+  device-mapper-persistent-data \
+  lvm2
+sudo yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum-config-manager --enable docker-ce-edge
+sudo yum install docker-ce -y
+sudo systemctl start docker
+sudo systemctl stop docker
+sudo sed 's/ExecStart=\/usr\/bin\/dockerd/ExecStart=\/usr\/bin\/dockerd -g \/data\/docker/g' /lib/systemd/system/docker.service > /lib/systemd/system/docker.service.tmp
+sudo mv /lib/systemd/system/docker.service.tmp  /lib/systemd/system/docker.service
+sudo systemctl start docker
+
+sudo systemctl enable docker
+
+
+#Installation Traefik
+sudo docker run --restart=always -d -p 8080:8080 -p 80:80 \
+-v /var/run/docker.sock:/var/run/docker.sock \
+traefik --api --docker 
