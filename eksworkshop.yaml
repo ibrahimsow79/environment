@@ -51,6 +51,13 @@ addons:
 - name: kube-proxy
   version: latest    
 
+iamIdentityMappings:
+  - arn: arn:aws:iam::395373063630:role/claranet-rw
+    groups:
+      - system:masters
+    username: admin
+    noDuplicateARNs: true # prevents shadowing of ARNs
+
 # To enable all of the control plane logs, uncomment below:
 cloudWatch:
   clusterLogging:
