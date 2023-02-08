@@ -61,7 +61,7 @@ iamIdentityMappings:
 # To enable all of the control plane logs, uncomment below:
 cloudWatch:
   clusterLogging:
-    logRetenttionInDays: 7
+    logRetentionInDays: 7
     enableTypes: [ "api", "audit", "authenticator", "controllerManager","scheduler"]
 
 secretsEncryption:

@@ -44,6 +44,9 @@
             "json()": {}
         }
     },
+    "typescript": {
+        "@formatOnSave": true
+    },
     "welcome": {
         "@first": true
     }
