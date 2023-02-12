@@ -10,6 +10,7 @@
         "@editor.snippetSuggestions": "top",
         "@editor.suggest.preview": true,
         "@editor.suggest.showMethods": true,
+        "@git.githubAuthentication": "",
         "all": {
             "@java": true
         }
